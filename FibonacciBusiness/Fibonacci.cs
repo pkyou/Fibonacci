@@ -1,16 +1,12 @@
 ﻿using System;
+using System.Numerics;
 
 namespace FibonacciBusiness
 {
     public class Fibonacci
     {
-        public static decimal GetItemByIndex(int i)
+        public static BigInteger GetItemByIndex(int i)
         {
-            if (i>=140)
-            {
-                return 0;
-            }
-            
             if (i <= 0)
             {
                 return 0;
@@ -21,9 +17,9 @@ namespace FibonacciBusiness
                 return 1;
             }
 
-            decimal preItem = 1;
-            decimal prePreItem = 1;
-            decimal temp = 0;
+            BigInteger preItem = 1;
+            BigInteger prePreItem = 1;
+            BigInteger temp = 0;
             
             for (int j = 2; j < i; j++)
             {

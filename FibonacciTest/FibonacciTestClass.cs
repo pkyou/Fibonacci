@@ -5,9 +5,6 @@ namespace FibonacciTest
 {
     public class FibonacciTestClass
     {
-
-        private Fibonacci _fibonacci = new Fibonacci(); 
-        
         [Fact]
         public void ShouldReturn1WhenGetFirstItem()
         {
