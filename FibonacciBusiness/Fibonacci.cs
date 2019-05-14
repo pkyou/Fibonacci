@@ -4,14 +4,14 @@ namespace FibonacciBusiness
 {
     public class Fibonacci
     {
-        public static BigInteger GetItemByIndex(int i)
+        public static BigInteger GetItemByIndex(int index)
         {
-            if (i <= 0)
+            if (index <= 0)
             {
                 return 0;
             }
 
-            if (i == 1 || i == 2)
+            if (index == 1 || index == 2)
             {
                 return 1;
             }
@@ -20,7 +20,7 @@ namespace FibonacciBusiness
             BigInteger prePreItem = 1;
             BigInteger temp = 0;
 
-            for (int j = 2; j < i; j++)
+            for (int i = 2; i < index; i++)
             {
                 temp = prePreItem + preItem;
                 prePreItem = preItem;
