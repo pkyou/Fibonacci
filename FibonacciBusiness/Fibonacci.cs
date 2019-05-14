@@ -1,5 +1,4 @@
-﻿using System;
-using System.Numerics;
+﻿using System.Numerics;
 
 namespace FibonacciBusiness
 {
@@ -11,7 +10,7 @@ namespace FibonacciBusiness
             {
                 return 0;
             }
-            
+
             if (i == 1 || i == 2)
             {
                 return 1;
@@ -20,14 +19,14 @@ namespace FibonacciBusiness
             BigInteger preItem = 1;
             BigInteger prePreItem = 1;
             BigInteger temp = 0;
-            
+
             for (int j = 2; j < i; j++)
             {
                 temp = prePreItem + preItem;
                 prePreItem = preItem;
                 preItem = temp;
             }
-            
+
             return temp;
         }
     }
