@@ -1,8 +1,6 @@
-using System;
 using BridgeCompetition.business.CardConvert;
 using BridgeCompetition.business.WholeCardGenerate;
 using Xunit;
-using Xunit.Sdk;
 
 namespace BridgeCompetitionTest
 {
@@ -12,7 +10,6 @@ namespace BridgeCompetitionTest
         
         private ICardConverter _cardConverter ;
         
-
         [Fact]
         public void ShouldReturnWholeCards()
         {
@@ -37,6 +34,37 @@ namespace BridgeCompetitionTest
             var card = _cardConverter.Convert("BK");
             Assert.Null(card);
         }
-        
+
+        [Fact]
+        public void ShouldReturnCardsIfCorrectDescription()
+        {
+            _cardConverter = new CardGeneralConverter(_wholeCardGenerator);
+
+            var cards = _cardConverter.ConvertToList("2D 3H 5C 9S KH");
+            Assert.Equal(5,cards.Count);
+            Assert.Equal("H",cards[1].Shape.DisplayShape);
+            Assert.Equal(5,cards[2].Number.value);
+        }
+
+        [Theory]
+        [InlineData("qweqwe")]
+        [InlineData("2D 3H 5C 9S KH KH")]
+        [InlineData("2D 3H 5C 9S kh")]
+        public void ShouldReturnListNullIfDescriptionIsWrong(string description)
+        {
+            _cardConverter = new CardGeneralConverter(_wholeCardGenerator);
+
+            var cards = _cardConverter.ConvertToList(description);
+            Assert.Null(cards);
+        }
+
+        [Fact]
+        public void ShouldReturnTongHuaShunType()
+        {
+            _cardConverter = new CardGeneralConverter(_wholeCardGenerator);
+
+            var type = _cardConverter.ConvertToType("6D 5D 4D 3D 2D");
+            Assert.Equal(9,type.Order);
+        }
     }
 }
