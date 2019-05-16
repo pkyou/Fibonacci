@@ -5,6 +5,6 @@ namespace BridgeCompetition.business.CardsInHandBusiness.CardsInHandComparator
 {
     public interface ICardsInHandComparator
     {
-        CardsInHandCompareResult Compare(List<Card> blackCards, List<Card> whiteCards);
+        CardsInHandCompareResult Compare(string blackCards, string whiteCards);    
     }
 }

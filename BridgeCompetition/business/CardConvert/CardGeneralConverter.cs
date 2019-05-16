@@ -12,7 +12,7 @@ namespace BridgeCompetition.business.CardConvert
 
         private List<Card> _wholeCards;
 
-        private List<int> _comparingValues = new List<int>();
+        private List<int> _comparingValues;
 
         public CardGeneralConverter(IWholeCardGenerator wholeCardGenerator)
         {
@@ -68,6 +68,7 @@ namespace BridgeCompetition.business.CardConvert
                 return null;
             }
 
+            _comparingValues = new List<int>();
             cardsInHand.Cards = cards;
             cardsInHand.Type = getType(cards);
             cardsInHand.ComparingVaules = _comparingValues;
