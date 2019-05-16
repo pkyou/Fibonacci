@@ -78,12 +78,17 @@ namespace BridgeCompetition.business.CardConvert
         private CardsInHandType getType(List<Card> cards)
         {
             var values = cards.Select(x => x.Number.value).Distinct().ToList();
-            var tieZhiType = new CardsInHandType {Name = "TieZhi", Order = 8};
-            var huLuType = new CardsInHandType {Name = "HuLu", Order = 7};
-            var sanTiaoType = new CardsInHandType {Name = "SanTiao", Order = 4};
+
+            var sanPaiType = new CardsInHandType {Name = "SanPai", Order = 1};
+            var duiZiType = new CardsInHandType {Name = "DuiZi", Order = 2};
             var liangDuiType = new CardsInHandType {Name = "LiangDui", Order = 3};
-
-
+            var sanTiaoType = new CardsInHandType {Name = "SanTiao", Order = 4};
+            var shunZiType = new CardsInHandType {Name = "ShunZi", Order = 5};
+            var tongHuaType = new CardsInHandType {Name = "TongHua", Order = 6};
+            var huLuType = new CardsInHandType {Name = "HuLu", Order = 7};
+            var tieZhiType = new CardsInHandType {Name = "TieZhi", Order = 8};
+            var tongHuaShunType = new CardsInHandType {Name = "TongHuaShun", Order = 9};
+            
             if (values.Count == 2)
             {
                 var list = cards.FindAll(x => x.Number.value == cards[0].Number.value);
@@ -156,7 +161,7 @@ namespace BridgeCompetition.business.CardConvert
                 values.Remove(_comparingValues[0]);
                 _comparingValues.AddRange(values);
                 
-                return new CardsInHandType {Name = "DuiZi", Order = 2};
+                return duiZiType;
             }
 
             if (values.Count == 5)
@@ -164,23 +169,23 @@ namespace BridgeCompetition.business.CardConvert
                 if (IsTongHuaShun(cards))
                 {
                     _comparingValues.Add(values[0]);
-                    return new CardsInHandType {Name = "TongHuaShun", Order = 9};
+                    return tongHuaShunType;
                 }
 
                 if (IsTongHua(cards))
                 {
                     _comparingValues.AddRange(values);
-                    return new CardsInHandType {Name = "TongHua", Order = 6};
+                    return tongHuaType;
                 }
 
                 if (IsShunZi(cards))
                 {
                     _comparingValues.Add(values[0]);
-                    return new CardsInHandType {Name = "ShunZi", Order = 5};
+                    return shunZiType;
                 }
 
                 _comparingValues.AddRange(values);
-                return new CardsInHandType {Name = "SanPai", Order = 1};
+                return sanPaiType;
             }
 
             return null;
