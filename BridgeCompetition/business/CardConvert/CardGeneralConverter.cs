@@ -45,9 +45,11 @@ namespace BridgeCompetition.business.CardConvert
                 {
                     return null;
                 }
-                
+
                 cards.Add(card);
             }
+
+            cards.Sort(new CardComparer());
 
             return cards;
         }
@@ -59,13 +61,70 @@ namespace BridgeCompetition.business.CardConvert
             {
                 return null;
             }
+            var values = cards.Select(x=>x.Number.value).Distinct().ToArray();
 
-            if (IsTongHuaShun(cards))
+            if (values.Length == 2)
             {
-                return new CardsInHandType{Name = "TongHuaShun",Order = 9};
+                var list = cards.FindAll(x=>x.Number.value == cards[0].Number.value);
+                if (list.Count == 1 || list.Count == 4)
+                {
+                    return new CardsInHandType{Name = "TieZhi",Order = 8};
+                }
+
+                return new CardsInHandType{Name = "HuLu",Order = 7};
+            }
+
+            if (values.Length == 3)
+            {
+                var list = cards.FindAll(x => x.Number.value == cards[0].Number.value);
+                if (list.Count == 1 )
+                {
+                    if (cards.FindAll(x => x.Number.value == cards[1].Number.value).Count == 1)
+                    {
+                        return new CardsInHandType {Name = "SanTiao", Order = 4};
+                    }
+                }
+
+                if (list.Count == 3)
+                {
+                    return new CardsInHandType {Name = "SanTiao", Order = 4};
+                }
+                
+                return new CardsInHandType {Name = "LiangDui", Order = 3};
+            }
+
+            if (values.Length == 4)
+            {
+                return new CardsInHandType{Name = "DuiZi",Order = 2};
+            }
+
+            if (values.Length == 5)
+            {
+                if (IsTongHuaShun(cards))
+                {
+                    return new CardsInHandType{Name = "TongHuaShun",Order = 9};
+                }
+
+                if (IsTongHua(cards))
+                {
+                    return new CardsInHandType{Name = "TongHua",Order = 6};
+                }
+                if (IsShunZi(cards))
+                {
+                    return new CardsInHandType{Name = "ShunZi",Order = 5};
+                }
+                
+                return new CardsInHandType{Name = "SanPai",Order = 1};
             }
 
             return null;
+        }
+        
+
+        private bool IsTieZhi(List<Card> cards)
+        {
+            var values = cards.Select(x=>x.Number.value).ToArray();
+            return values.Select(value => cards.FindAll(x => x.Number.value == value).Count == 4).FirstOrDefault();
         }
 
         private bool IsTongHuaShun(List<Card> cards)
