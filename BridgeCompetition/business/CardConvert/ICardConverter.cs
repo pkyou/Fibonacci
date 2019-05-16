@@ -9,6 +9,6 @@ namespace BridgeCompetition.business.CardConvert
 
         List<Card> ConvertToList(string cardDescription);
 
-        CardsInHandType ConvertToType(string cardDescription);
+        CardsInHand ConvertToCardsInHand(string cardDescription);
     }
 }

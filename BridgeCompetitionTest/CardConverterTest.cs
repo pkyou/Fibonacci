@@ -58,87 +58,24 @@ namespace BridgeCompetitionTest
             var cards = _cardConverter.ConvertToList(description);
             Assert.Null(cards);
         }
-
-        [Fact]
-        public void ShouldReturnTongHuaShunType()
-        {
-            _cardConverter = new CardGeneralConverter(_wholeCardGenerator);
-
-            var type = _cardConverter.ConvertToType("6D 5D 4D 3D 2D");
-            Assert.Equal(9,type.Order);
-        }
         
-        [Fact]
-        public void ShouldReturnTieZhiType()
+        [Theory]
+        [InlineData("6D 5D 4D 3D 2D",9,1)]
+        [InlineData("6D 6H 6C 6S 2D",8,1)]
+        [InlineData("6D 6H 6C 2S 2D",7,1)]
+        [InlineData("6D 3D 7D 9D 8D",6,5)]
+        [InlineData("6D 5H 7D 9D 8D",5,1)]
+        [InlineData("6D 6H 6C 9D 8D",4,1)]
+        [InlineData("6D 6H 5C 5D 8D",3,3)]
+        [InlineData("6D 6H 5C 7D 8D",2,4)]
+        [InlineData("6D AH 5C 7D 8D",1,5)]
+        public void ShouldReturnCorrectCardsInHand(string description,int order,int comparingCount)
         {
             _cardConverter = new CardGeneralConverter(_wholeCardGenerator);
 
-            var type = _cardConverter.ConvertToType("6D 6H 6C 6S 2D");
-            Assert.Equal(8,type.Order);
+            var cardsInHand = _cardConverter.ConvertToCardsInHand(description);
+            Assert.Equal(order,cardsInHand.Type.Order);
+            Assert.Equal(comparingCount,cardsInHand.ComparingVaules.Count);
         }
-
-        [Fact]
-        public void ShouldReturnHuLuType()
-        {
-            _cardConverter = new CardGeneralConverter(_wholeCardGenerator);
-
-            var type = _cardConverter.ConvertToType("6D 6H 6C 2S 2D");
-            Assert.Equal(7,type.Order);
-        }
-
-        [Fact]
-        public void ShouldReturnTongHua()
-        {
-            _cardConverter = new CardGeneralConverter(_wholeCardGenerator);
-
-            var type = _cardConverter.ConvertToType("6D 3D 7D 9D 8D");
-            Assert.Equal(6,type.Order);
-        }
-
-        [Fact]
-        public void ShouldReturnShunZi()
-        {
-            _cardConverter = new CardGeneralConverter(_wholeCardGenerator);
-
-            var type = _cardConverter.ConvertToType("6D 5H 7D 9D 8D");
-            Assert.Equal(5,type.Order);
-        }
-
-        [Fact]
-        public void ShouldReturnSanTiaoType()
-        {
-            _cardConverter = new CardGeneralConverter(_wholeCardGenerator);
-
-            var type = _cardConverter.ConvertToType("6D 6H 6C 9D 8D");
-            Assert.Equal(4,type.Order);
-        }
-
-        [Fact]
-        public void ShouldReturnLiangDuiType()
-        {
-            _cardConverter = new CardGeneralConverter(_wholeCardGenerator);
-
-            var type = _cardConverter.ConvertToType("6D 6H 5C 5D 8D");
-            Assert.Equal(3,type.Order);
-        }
-
-        [Fact]
-        public void ShouldReturnDuiZiType()
-        {
-            _cardConverter = new CardGeneralConverter(_wholeCardGenerator);
-
-            var type = _cardConverter.ConvertToType("6D 6H 5C 7D 8D");
-            Assert.Equal(2,type.Order);
-        }
-
-        [Fact]
-        public void ShouldReturnSanPaiType()
-        {
-            _cardConverter = new CardGeneralConverter(_wholeCardGenerator);
-
-            var type = _cardConverter.ConvertToType("6D AH 5C 7D 8D");
-            Assert.Equal(1,type.Order);
-        }
-        
     }
 }
