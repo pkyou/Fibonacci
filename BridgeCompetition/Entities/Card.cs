@@ -8,7 +8,7 @@ namespace BridgeCompetition.Entities
         public CardNumber Number { get; set; }
         public int CompareTo(object obj)
         {
-            return obj is Card card ? Number.value.CompareTo(card.Number.value) : 1;
+            return obj is Card card ? Number.Value.CompareTo(card.Number.Value) : 1;
         }
     }
 }

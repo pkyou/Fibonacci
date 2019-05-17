@@ -25,7 +25,7 @@ namespace BridgeCompetitionTest
             var card = _cardConverter.Convert("AS");
             Assert.Equal(1,card.Shape.Order);
             Assert.Equal("S",card.Shape.DisplayShape);
-            Assert.Equal(14,card.Number.value);
+            Assert.Equal(14,card.Number.Value);
         }
 
         [Fact]
@@ -43,8 +43,8 @@ namespace BridgeCompetitionTest
 
             var cards = _cardConverter.ConvertToList("2D 3H 5C 9S KH");
             Assert.Equal(5,cards.Count);
-            Assert.Equal("H",cards[1].Shape.DisplayShape);
-            Assert.Equal(5,cards[2].Number.value);
+            Assert.Equal("S",cards[1].Shape.DisplayShape);
+            Assert.Equal(5,cards[2].Number.Value);
         }
 
         [Theory]
@@ -75,7 +75,7 @@ namespace BridgeCompetitionTest
 
             var cardsInHand = _cardConverter.ConvertToCardsInHand(description);
             Assert.Equal(order,cardsInHand.Type.Order);
-            Assert.Equal(comparingCount,cardsInHand.ComparingVaules.Count);
+            Assert.Equal(comparingCount,cardsInHand.ComparingValues.Count);
         }
     }
 }

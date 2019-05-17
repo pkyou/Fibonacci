@@ -7,7 +7,7 @@ namespace BridgeCompetition.business
     {
         public int Compare(Card x, Card y)
         {
-            return y.Number.value.CompareTo(x.Number.value);
+            return y.Number.Value.CompareTo(x.Number.Value);
         }
     }
 }

@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using BridgeCompetition.business.WholeCardGenerate;
@@ -8,16 +7,13 @@ namespace BridgeCompetition.business.CardConvert
 {
     public class CardGeneralConverter : ICardConverter
     {
-        private IWholeCardGenerator _wholeCardGenerator;
-
-        private List<Card> _wholeCards;
+        private readonly List<Card> _wholeCards;
 
         private List<int> _comparingValues;
 
         public CardGeneralConverter(IWholeCardGenerator wholeCardGenerator)
         {
-            _wholeCardGenerator = wholeCardGenerator;
-            _wholeCards = _wholeCardGenerator.Generate();
+            _wholeCards = wholeCardGenerator.Generate();
         }
 
         public Card Convert(string cardDescription)
@@ -70,14 +66,14 @@ namespace BridgeCompetition.business.CardConvert
 
             _comparingValues = new List<int>();
             cardsInHand.Cards = cards;
-            cardsInHand.Type = getType(cards);
-            cardsInHand.ComparingVaules = _comparingValues;
+            cardsInHand.Type = GetType(cards);
+            cardsInHand.ComparingValues = _comparingValues;
             return cardsInHand;
         }
 
-        private CardsInHandType getType(List<Card> cards)
+        private CardsInHandType GetType(List<Card> cards)
         {
-            var values = cards.Select(x => x.Number.value).Distinct().ToList();
+            var values = cards.Select(x => x.Number.Value).Distinct().ToList();
 
             var sanPaiType = new CardsInHandType {Name = "SanPai", Order = 1};
             var duiZiType = new CardsInHandType {Name = "DuiZi", Order = 2};
@@ -91,29 +87,29 @@ namespace BridgeCompetition.business.CardConvert
             
             if (values.Count == 2)
             {
-                var list = cards.FindAll(x => x.Number.value == cards[0].Number.value);
+                var list = cards.FindAll(x => x.Number.Value == cards[0].Number.Value);
                 
                 if (list.Count == 1)
                 {
-                    _comparingValues.Add(cards[1].Number.value);
+                    _comparingValues.Add(cards[1].Number.Value);
                     return tieZhiType ;
                 }
 
                 if (list.Count == 2)
                 {
-                    _comparingValues.Add(cards[1].Number.value);
+                    _comparingValues.Add(cards[1].Number.Value);
                     return huLuType;
                 }
 
                 if (list.Count == 3)
                 {
-                    _comparingValues.Add(cards[0].Number.value);
+                    _comparingValues.Add(cards[0].Number.Value);
                     return huLuType;
                 }
 
                 if (list.Count == 4)
                 {
-                    _comparingValues.Add(cards[0].Number.value);
+                    _comparingValues.Add(cards[0].Number.Value);
                     return tieZhiType;
                 }
 
@@ -122,25 +118,25 @@ namespace BridgeCompetition.business.CardConvert
 
             if (values.Count == 3)
             {
-                var list = cards.FindAll(x => x.Number.value == cards[0].Number.value);
+                var list = cards.FindAll(x => x.Number.Value == cards[0].Number.Value);
                 if (list.Count == 1)
                 {
-                    if (cards.FindAll(x => x.Number.value == cards[1].Number.value).Count == 1)
+                    if (cards.FindAll(x => x.Number.Value == cards[1].Number.Value).Count == 1)
                     {
-                        _comparingValues.Add(cards[2].Number.value);
+                        _comparingValues.Add(cards[2].Number.Value);
                         return sanTiaoType;
                     }
                     
-                    if (cards.FindAll(x => x.Number.value == cards[1].Number.value).Count == 3)
+                    if (cards.FindAll(x => x.Number.Value == cards[1].Number.Value).Count == 3)
                     {
-                        _comparingValues.Add(cards[1].Number.value);
+                        _comparingValues.Add(cards[1].Number.Value);
                         return sanTiaoType;
                     }
                 }
 
                 if (list.Count == 3)
                 {
-                    _comparingValues.Add(cards[0].Number.value);
+                    _comparingValues.Add(cards[0].Number.Value);
                     return sanTiaoType;
                 }
 
@@ -152,7 +148,7 @@ namespace BridgeCompetition.business.CardConvert
             {
                 foreach (var value in values)
                 {
-                    if (cards.FindAll(x=>x.Number.value == value).Count == 2)
+                    if (cards.FindAll(x=>x.Number.Value == value).Count == 2)
                     {
                         _comparingValues.Add(value);
                     }
@@ -201,7 +197,7 @@ namespace BridgeCompetition.business.CardConvert
         {
             for (var i = 0; i < cards.Count - 1; i++)
             {
-                if (cards[i].Number.value - cards[i + 1].Number.value != 1)
+                if (cards[i].Number.Value - cards[i + 1].Number.Value != 1)
                 {
                     return false;
                 }

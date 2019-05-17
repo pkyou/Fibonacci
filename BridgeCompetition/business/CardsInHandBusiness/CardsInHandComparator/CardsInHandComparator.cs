@@ -5,11 +5,12 @@ namespace BridgeCompetition.business.CardsInHandBusiness.CardsInHandComparator
 {
     public class CardsInHandComparator : ICardsInHandComparator
     {
-        private ICardConverter _converter;
+        private readonly ICardConverter _converter;
         public CardsInHandComparator(ICardConverter converter)
         {
             _converter = converter;
         }
+
         public CardsInHandCompareResult Compare(string blackCards, string whiteCards)
         {
             CardsInHandCompareResult result = new CardsInHandCompareResult();
@@ -19,50 +20,49 @@ namespace BridgeCompetition.business.CardsInHandBusiness.CardsInHandComparator
             if (blackCardsInHand == null || whiteCardsInHand == null || blackCardsInHand.Type == null ||
                 whiteCardsInHand.Type == null)
             {
-                result.ResultEnum = CompareResultEnum.ERROR;
+                result.ResultEnum = CompareResultEnum.Error;
                 return result;
             }
 
             if (blackCardsInHand.Type.Order > whiteCardsInHand.Type.Order)
             {
-                result.ResultEnum = CompareResultEnum.BLACKWIN;
+                result.ResultEnum = CompareResultEnum.Blackwin;
                 return result;
             }
 
             if (blackCardsInHand.Type.Order < whiteCardsInHand.Type.Order)
             {
-                result.ResultEnum = CompareResultEnum.WHITEWIN;
+                result.ResultEnum = CompareResultEnum.Whitewin;
                 return result;
             }
 
-            if (blackCardsInHand.Type.Order == whiteCardsInHand.Type.Order)
+            var blackComparingValues = blackCardsInHand.ComparingValues;
+            var whiteComparingValues = whiteCardsInHand.ComparingValues;
+            
+            if (blackComparingValues.Count != whiteComparingValues.Count)
             {
-                var blackComparingValues = blackCardsInHand.ComparingVaules;
-                var whiteComparingValues = whiteCardsInHand.ComparingVaules;
-                if (blackComparingValues.Count != whiteComparingValues.Count)
+                result.ResultEnum = CompareResultEnum.Error;
+                return result;
+            }
+
+            for (var i = 0; i < blackComparingValues.Count; i++)
+            {
+                if (blackComparingValues[i] > whiteComparingValues[i])
                 {
-                    result.ResultEnum = CompareResultEnum.ERROR;
+                    result.ResultEnum = CompareResultEnum.Blackwin;
                     return result;
                 }
 
-                for (int i = 0; i < blackComparingValues.Count; i++)
+                if (blackComparingValues[i] < whiteComparingValues[i])
                 {
-                    if (blackComparingValues[i] > whiteComparingValues[i])
-                    {
-                        result.ResultEnum = CompareResultEnum.BLACKWIN;
-                        return result;
-                    }
-
-                    if (blackComparingValues[i] < whiteComparingValues[i])
-                    {
-                        result.ResultEnum = CompareResultEnum.WHITEWIN;
-                        return result;
-                    }
+                    result.ResultEnum = CompareResultEnum.Whitewin;
+                    return result;
                 }
-
-                result.ResultEnum = CompareResultEnum.TIE;
             }
-    
+
+            result.ResultEnum = CompareResultEnum.Tie;
+
+
             return result;
         }
     }

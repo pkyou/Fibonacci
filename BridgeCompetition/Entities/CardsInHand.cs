@@ -8,6 +8,6 @@ namespace BridgeCompetition.Entities
         
         public CardsInHandType Type { get; set; }
         
-        public List<int> ComparingVaules { get; set; }
+        public List<int> ComparingValues { get; set; }
     }
 }
