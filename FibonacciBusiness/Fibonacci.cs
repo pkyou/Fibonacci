@@ -11,18 +11,20 @@ namespace FibonacciBusiness
                 return 0;
             }
 
-            if (index == 1 || index == 2)
+            if (index == 1 || index == 2 || index == 3)
             {
                 return 1;
             }
 
             BigInteger preItem = 1;
             BigInteger prePreItem = 1;
+            BigInteger prePrePreItem = 1;
             BigInteger temp = 0;
 
-            for (int i = 2; i < index; i++)
+            for (int i = 3; i < index; i++)
             {
-                temp = prePreItem + preItem;
+                temp = prePrePreItem + prePreItem + preItem;
+                prePrePreItem = prePreItem;
                 prePreItem = preItem;
                 preItem = temp;
             }

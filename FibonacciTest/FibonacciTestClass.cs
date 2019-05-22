@@ -18,21 +18,33 @@ namespace FibonacciTest
         }
 
         [Fact]
-        public void ShouldReturnSumOfFirstAndSecWhenGetThirdItem()
+        public void ShouldReturn1WhenGetThirdItem()
         {
-            Assert.Equal(Fibonacci.GetItemByIndex(1) + Fibonacci.GetItemByIndex(2), Fibonacci.GetItemByIndex(3));
+            Assert.Equal(1, Fibonacci.GetItemByIndex(3));
         }
 
         [Fact]
-        public void ShouldReturn34WhenGetNinthItem()
+        public void ShouldReturn3WhenGetFourthItem()
         {
-            Assert.Equal(34, Fibonacci.GetItemByIndex(9));
+            Assert.Equal(3, Fibonacci.GetItemByIndex(4));
+        }
+        
+        [Fact]
+        public void ShouldReturnSumOfFirstAndSecWhenGetThirdItem()
+        {
+            Assert.Equal(Fibonacci.GetItemByIndex(1) + Fibonacci.GetItemByIndex(2) + Fibonacci.GetItemByIndex(3), Fibonacci.GetItemByIndex(4));
+        }
+
+        [Fact]
+        public void ShouldReturn355WhenGetTwelveItem()
+        {
+            Assert.Equal(355, Fibonacci.GetItemByIndex(12));
         }
 
         [Fact]
         public void ShouldBeEqualWhenBigData()
         {
-            Assert.Equal(Fibonacci.GetItemByIndex(1200),Fibonacci.GetItemByIndex(1199)+Fibonacci.GetItemByIndex(1198));
+            Assert.Equal(Fibonacci.GetItemByIndex(1200),Fibonacci.GetItemByIndex(1199)+Fibonacci.GetItemByIndex(1198) + Fibonacci.GetItemByIndex(1197));
         }
     }
 }
