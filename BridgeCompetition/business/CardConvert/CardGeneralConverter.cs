@@ -57,131 +57,138 @@ namespace BridgeCompetition.business.CardConvert
         public CardsInHand ConvertToCardsInHand(string cardDescription)
         {
             var cards = ConvertToList(cardDescription);
-            var cardsInHand = new CardsInHand();
 
-            if (cards == null)
-            {
-                return null;
-            }
-
-            _comparingValues = new List<int>();
-            cardsInHand.Cards = cards;
-            cardsInHand.Type = GetType(cards);
-            cardsInHand.ComparingValues = _comparingValues;
-            return cardsInHand;
+            return cards == null ? null : GetType(cards);
         }
 
-        private CardsInHandType GetType(List<Card> cards)
+        private CardsInHand GetType(List<Card> cards)
         {
-            var values = cards.Select(x => x.Number.Value).Distinct().ToList();
+            var distinctValues = cards.Select(x => x.Number.Value).Distinct().ToList();
 
-            var sanPaiType = new CardsInHandType {Name = "SanPai", Order = 1};
-            var duiZiType = new CardsInHandType {Name = "DuiZi", Order = 2};
-            var liangDuiType = new CardsInHandType {Name = "LiangDui", Order = 3};
-            var sanTiaoType = new CardsInHandType {Name = "SanTiao", Order = 4};
-            var shunZiType = new CardsInHandType {Name = "ShunZi", Order = 5};
-            var tongHuaType = new CardsInHandType {Name = "TongHua", Order = 6};
-            var huLuType = new CardsInHandType {Name = "HuLu", Order = 7};
-            var tieZhiType = new CardsInHandType {Name = "TieZhi", Order = 8};
-            var tongHuaShunType = new CardsInHandType {Name = "TongHuaShun", Order = 9};
+            if (distinctValues.Count == 2)
+            {
+                return GetTwoDistinctValueCardsInHand(cards);
+            }
+
+            if (distinctValues.Count == 3)
+            {
+                return GetThreeDistinctValueCardsInHand(cards);
+            }
+
+            if (distinctValues.Count == 4)
+            {
+                return GetFourDistinctValueCardsInHand(cards);
+            }
+
+            if (distinctValues.Count == 5)
+            {
+                return GetFiveDistinctValueCardsInHand(cards);
+            }
+
+            return null;
+        }
+        
+        private CardsInHand GetFiveDistinctValueCardsInHand(List<Card> cards)
+        {
+            var comparingValues = new List<int>();
+            var distinctValues = cards.Select(x => x.Number.Value).Distinct().ToList();
             
-            if (values.Count == 2)
+            if (IsTongHuaShun(cards))
             {
-                var list = cards.FindAll(x => x.Number.Value == cards[0].Number.Value);
-                
-                if (list.Count == 1)
-                {
-                    _comparingValues.Add(cards[1].Number.Value);
-                    return tieZhiType ;
-                }
-
-                if (list.Count == 2)
-                {
-                    _comparingValues.Add(cards[1].Number.Value);
-                    return huLuType;
-                }
-
-                if (list.Count == 3)
-                {
-                    _comparingValues.Add(cards[0].Number.Value);
-                    return huLuType;
-                }
-
-                if (list.Count == 4)
-                {
-                    _comparingValues.Add(cards[0].Number.Value);
-                    return tieZhiType;
-                }
-
-                return huLuType;
+                comparingValues.Add(distinctValues[0]);
+                return new CardsInHand{ComparingValues = comparingValues,Type = CardsInHandTypeFactory.GetTongHuaShunType()};
             }
 
-            if (values.Count == 3)
+            if (IsTongHua(cards))
             {
-                var list = cards.FindAll(x => x.Number.Value == cards[0].Number.Value);
-                if (list.Count == 1)
+                comparingValues.AddRange(distinctValues);
+                return new CardsInHand{ComparingValues = comparingValues,Type = CardsInHandTypeFactory.GetTongHuaType()};
+            }
+
+            if (IsShunZi(cards))
+            {
+                comparingValues.Add(distinctValues[0]);
+                return new CardsInHand{ComparingValues = comparingValues,Type = CardsInHandTypeFactory.GetShunZiType()};
+            }
+
+            comparingValues.AddRange(distinctValues);
+            return new CardsInHand{ComparingValues = comparingValues,Type = CardsInHandTypeFactory.GetSanPaiType()};
+        }
+
+        private CardsInHand GetFourDistinctValueCardsInHand(List<Card> cards)
+        {
+            var comparingValues = new List<int>();
+            var distinctValues = cards.Select(x => x.Number.Value).Distinct().ToList();
+            foreach (var value in distinctValues)
+            {
+                if (cards.FindAll(x=>x.Number.Value == value).Count == 2)
                 {
-                    if (cards.FindAll(x => x.Number.Value == cards[1].Number.Value).Count == 1)
-                    {
-                        _comparingValues.Add(cards[2].Number.Value);
-                        return sanTiaoType;
-                    }
+                    comparingValues.Add(value);
+                }
+            }
+
+            distinctValues.Remove(comparingValues[0]);
+            comparingValues.AddRange(distinctValues);
+                
+            return new CardsInHand{ComparingValues = comparingValues,Type = CardsInHandTypeFactory.GetDuiZiType()};
+        }
+        
+        private CardsInHand GetThreeDistinctValueCardsInHand(List<Card> cards)
+        {
+            var comparingValues = new List<int>();
+            var list = cards.FindAll(x => x.Number.Value == cards[0].Number.Value);
+            if (list.Count == 1)
+            {
+                if (cards.FindAll(x => x.Number.Value == cards[1].Number.Value).Count == 1)
+                {
+                    comparingValues.Add(cards[2].Number.Value);
+                    return new CardsInHand{ComparingValues = comparingValues,Type = CardsInHandTypeFactory.GetSanTiaoType()};
+                }
                     
-                    if (cards.FindAll(x => x.Number.Value == cards[1].Number.Value).Count == 3)
-                    {
-                        _comparingValues.Add(cards[1].Number.Value);
-                        return sanTiaoType;
-                    }
-                }
-
-                if (list.Count == 3)
+                if (cards.FindAll(x => x.Number.Value == cards[1].Number.Value).Count == 3)
                 {
-                    _comparingValues.Add(cards[0].Number.Value);
-                    return sanTiaoType;
+                    comparingValues.Add(cards[1].Number.Value); 
+                    return new CardsInHand{ComparingValues = comparingValues,Type = CardsInHandTypeFactory.GetSanTiaoType()};
                 }
-
-                _comparingValues.AddRange(values);
-                return liangDuiType;
             }
 
-            if (values.Count == 4)
+            if (list.Count == 3)
             {
-                foreach (var value in values)
-                {
-                    if (cards.FindAll(x=>x.Number.Value == value).Count == 2)
-                    {
-                        _comparingValues.Add(value);
-                    }
-                }
+                comparingValues.Add(cards[0].Number.Value);
+                return new CardsInHand{ComparingValues = comparingValues,Type = CardsInHandTypeFactory.GetSanTiaoType()};
+            }
 
-                values.Remove(_comparingValues[0]);
-                _comparingValues.AddRange(values);
+            comparingValues.AddRange(cards.Select(x => x.Number.Value).Distinct().ToList());
+            return new CardsInHand{ComparingValues = comparingValues,Type = CardsInHandTypeFactory.GetLiangDuiType()};
+        }
+
+        private CardsInHand GetTwoDistinctValueCardsInHand(List<Card> cards)
+        {
+            var list = cards.FindAll(x => x.Number.Value == cards[0].Number.Value);
+            var comparingValues = new List<int>();
                 
-                return duiZiType;
+            if (list.Count == 1)
+            {
+                comparingValues.Add(cards[1].Number.Value);
+                return new CardsInHand{ComparingValues = comparingValues,Type = CardsInHandTypeFactory.GetTieZhiType()};
             }
 
-            if (values.Count == 5)
+            if (list.Count == 2)
             {
-                if (IsTongHuaShun(cards))
-                {
-                    _comparingValues.Add(values[0]);
-                    return tongHuaShunType;
-                }
+                comparingValues.Add(cards[1].Number.Value);
+                return new CardsInHand{ComparingValues = comparingValues,Type = CardsInHandTypeFactory.GetHuLuType()};
+            }
 
-                if (IsTongHua(cards))
-                {
-                    _comparingValues.AddRange(values);
-                    return tongHuaType;
-                }
+            if (list.Count == 3)
+            {
+                comparingValues.Add(cards[0].Number.Value);
+                return new CardsInHand{ComparingValues = comparingValues,Type = CardsInHandTypeFactory.GetHuLuType()};
+            }
 
-                if (IsShunZi(cards))
-                {
-                    _comparingValues.Add(values[0]);
-                    return shunZiType;
-                }
-
-                _comparingValues.AddRange(values);
-                return sanPaiType;
+            if (list.Count == 4)
+            {
+                comparingValues.Add(cards[0].Number.Value);
+                return new CardsInHand{ComparingValues = comparingValues,Type = CardsInHandTypeFactory.GetTieZhiType()};
             }
 
             return null;
@@ -190,7 +197,6 @@ namespace BridgeCompetition.business.CardConvert
         private bool IsTongHuaShun(List<Card> cards)
         {
             return IsTongHua(cards) && IsShunZi(cards);
-
         }
 
         private bool IsShunZi(List<Card> cards)
